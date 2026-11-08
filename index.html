@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TaskMint</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#090909;--card:#151515;--gold:#d7ad45;--text:#f5f5f5;--muted:#9b9b9b;--line:#262626}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#080808,#111 60%,#080808);color:var(--text);font-family:Inter,system-ui,sans-serif}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:20px 16px 92px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.brand{font-weight:800;letter-spacing:.5px}.brand span{color:var(--gold)}
+.avatar{width:40px;height:40px;border-radius:50%;background:#222;display:grid;place-items:center}
+.card{background:linear-gradient(145deg,#171717,#101010);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 8px 30px #0008}
+.balance-label{color:var(--muted);font-size:13px}.balance{font-size:34px;font-weight:800;margin:5px 0}.pts{color:var(--gold);font-size:13px}
+.btn{border:0;border-radius:13px;padding:12px 16px;font-weight:800;cursor:pointer;background:var(--gold);color:#111}
+.btn.secondary{background:#222;color:#fff;border:1px solid #333}.btn:disabled{opacity:.5}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.stat{flex:1}.stat b{display:block;font-size:18px}.stat small{color:var(--muted)}
+.title{font-size:18px;font-weight:800;margin:4px 0 12px}.task{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.task:last-child{border:0}
+.icon{width:40px;height:40px;border-radius:12px;background:#222;display:grid;place-items:center}.task-main{flex:1}.task-main b{display:block}.task-main small{color:var(--muted)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0d0d0df2;border-top:1px solid #292929;backdrop-filter:blur(12px)}
+.navin{max-width:520px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px env(safe-area-inset-bottom)}
+.nav button{background:none;border:0;color:#888;padding:8px 2px;font-size:11px}.nav button.active{color:var(--gold)}
+.page{display:none}.page.active{display:block}.notice{color:var(--muted);font-size:12px;line-height:1.5}
+.ref{background:#201b0d;border:1px solid #4b3c16;border-radius:14px;padding:14px;margin-top:12px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header"><div class="brand">⚡ <span>Task</span>Mint</div><div class="avatar" id="avatar">TM</div></div>
+
+  <section id="home" class="page active">
+    <div class="card">
+      <div class="balance-label">YOUR BALANCE</div>
+      <div class="balance" id="balance">0</div>
+      <div class="pts">TASKMINT POINTS</div>
+      <div style="margin-top:16px"><button class="btn" id="claim">⚡ Daily Claim</button></div>
+    </div>
+    <div class="card row">
+      <div class="stat"><b id="streak">0</b><small>Day Streak</small></div>
+      <div class="stat"><b id="refs">0</b><small>Referrals</small></div>
+      <div class="stat"><b id="rank">—</b><small>Rank</small></div>
+    </div>
+    <div class="card"><div class="title">🎯 Today's tasks</div><div id="homeTasks"></div></div>
+  </section>
+
+  <section id="tasks" class="page">
+    <div class="card"><div class="title">🎯 Tasks</div><div id="taskList"></div></div>
+  </section>
+
+  <section id="invite" class="page">
+    <div class="card"><div class="title">👥 Invite & Earn</div>
+      <p class="notice">Share your personal referral link. Rewards are issued only for valid, eligible activity.</p>
+      <div class="ref" id="refLink">Generating…</div>
+      <div style="margin-top:12px"><button class="btn" id="share">Share Link</button></div>
+    </div>
+    <div class="card row"><div class="stat"><b id="refCount">0</b><small>Total Referrals</small></div><div class="stat"><b id="refEarn">0</b><small>Referral Points</small></div></div>
+  </section>
+
+  <section id="rewards" class="page">
+    <div class="card"><div class="title">🎁 Rewards</div>
+      <div class="task"><div class="icon">🎁</div><div class="task-main"><b>Coming Soon</b><small>Rewards will be enabled after the MVP is connected to a verified backend.</small></div></div>
+    </div>
+  </section>
+
+  <section id="leaderboard" class="page">
+    <div class="card"><div class="title">🏆 Leaderboard</div><div id="board"></div></div>
+  </section>
+
+  <section id="profile" class="page">
+    <div class="card"><div class="title">👤 Profile</div>
+      <div class="task"><div class="icon">🆔</div><div class="task-main"><b id="userName">Demo User</b><small id="userId">Demo mode</small></div></div>
+      <p class="notice">Production note: Telegram identity and all reward transactions must be verified server-side.</p>
+    </div>
+  </section>
+</div>
+
+<div class="nav"><div class="navin">
+<button data-page="home" class="active">🏠<br>Home</button>
+<button data-page="tasks">🎯<br>Tasks</button>
+<button data-page="invite">👥<br>Invite</button>
+<button data-page="rewards">🎁<br>Rewards</button>
+<button data-page="profile">👤<br>Profile</button>
+</div></div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+tg?.ready(); tg?.expand();
+
+const KEY="taskmint_demo_v1";
+let state=JSON.parse(localStorage.getItem(KEY)||'{"points":0,"streak":0,"refs":0,"refEarn":0,"claimed":false,"tasks":{}}');
+const tasks=[
+ {id:"check",icon:"⚡",name:"Daily Check-in",desc:"+100 points daily",reward:100},
+ {id:"quiz",icon:"🧠",name:"Daily Quiz",desc:"+50 points",reward:50},
+ {id:"channel",icon:"📢",name:"Community Task",desc:"+25 points",reward:25}
+];
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function render(){
+ document.getElementById("balance").textContent=state.points.toLocaleString();
+ document.getElementById("streak").textContent=state.streak;
+ document.getElementById("refs").textContent=state.refs;
+ document.getElementById("refCount").textContent=state.refs;
+ document.getElementById("refEarn").textContent=state.refEarn;
+ const user=tg?.initDataUnsafe?.user;
+ if(user){document.getElementById("userName").textContent=[user.first_name,user.last_name].filter(Boolean).join(" ");document.getElementById("userId").textContent="Telegram ID: "+user.id;document.getElementById("avatar").textContent=(user.first_name||"T").slice(0,2).toUpperCase()}
+ const html=tasks.map(t=>`<div class="task"><div class="icon">${t.icon}</div><div class="task-main"><b>${t.name}</b><small>${t.desc}</small></div><button class="btn secondary" ${state.tasks[t.id]?"disabled":""} onclick="completeTask('${t.id}')">${state.tasks[t.id]?"Done":"Claim"}</button></div>`).join("");
+ document.getElementById("taskList").innerHTML=html; document.getElementById("homeTasks").innerHTML=html;
+ document.getElementById("claim").disabled=state.claimed;
+ document.getElementById("claim").textContent=state.claimed?"✓ Claimed Today":"⚡ Daily Claim";
+ document.getElementById("refLink").textContent="https://t.me/YOUR_BOT_USERNAME?start=ref_"+(user?.id||"demo");
+ document.getElementById("board").innerHTML=["You","TopMiner","TaskMaster","RewardKing","CryptoFan"].map((n,i)=>`<div class="task"><div class="icon">${i+1}</div><div class="task-main"><b>${n}</b><small>${Math.max(1000-i*173,state.points-i*173).toLocaleString()} points</small></div></div>`).join("");
+}
+function completeTask(id){if(state.tasks[id])return;state.tasks[id]=true;state.points+=tasks.find(x=>x.id===id).reward;save()}
+document.getElementById("claim").onclick=()=>{if(!state.claimed){state.points+=100;state.streak++;state.claimed=true;save()}};
+document.getElementById("share").onclick=()=>{const link=document.getElementById("refLink").textContent;if(tg?.openTelegramLink)tg.openTelegramLink("https://t.me/share/url?url="+encodeURIComponent(link));else navigator.clipboard?.writeText(link)};
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(b.dataset.page).classList.add("active")});
+render();
+</script>
+</body>
+</html>
