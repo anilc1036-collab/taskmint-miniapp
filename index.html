@@ -209,14 +209,7 @@ function render() {
  document.getElementById("refLink").textContent =
  "https://t.me/YOUR_BOT_USERNAME?start=ref_" + (user?.id || "demo");
 
- document.getElementById("board").innerHTML =
- ["You","TopMiner","TaskMaster","RewardKing","CryptoFan"]
- .map((n,i) => `
-  <div class="task">
-   <div class="icon">${i+1}</div>
-   <div class="task-main"><b>${n}</b></div>
-  </div>
- `).join("");
+ 
 }
 
 // LOAD TASKS FROM SUPABASE
