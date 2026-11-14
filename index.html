@@ -6,39 +6,100 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>TaskMint</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <style>
-:root{--bg:#090909;--card:#151515;--gold:#d7ad45;--text:#f5f5f5;--muted:#9b9b9b;--line:#262626}
-*{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#080808,#111 60%,#080808);color:var(--text);font-family:Inter,system-ui,sans-serif}
-.app{max-width:520px;margin:auto;min-height:100vh;padding:20px 16px 92px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.brand{font-weight:800;letter-spacing:.5px}.brand span{color:var(--gold)}
-.avatar{width:40px;height:40px;border-radius:50%;background:#222;display:grid;place-items:center}
-.card{background:linear-gradient(145deg,#171717,#101010);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 8px 30px #0008}
-.balance-label{color:var(--muted);font-size:13px}
-.balance{font-size:34px;font-weight:800;margin:5px 0}
-.pts{color:var(--gold);font-size:13px}
-.btn{border:0;border-radius:13px;padding:12px 16px;font-weight:800;cursor:pointer;background:var(--gold);color:#111}
-.btn.secondary{background:#222;color:#fff;border:1px solid #333}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-.row{display:flex;justify-content:space-between;gap:12px;align-items:center}
-.stat{flex:1}.stat b{display:block;font-size:18px}
-.stat small{color:var(--muted)}
-.title{font-size:18px;font-weight:800;margin:4px 0 12px}
-.task{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
-.task:last-child{border:0}
-.icon{width:40px;height:40px;border-radius:12px;background:#222;display:grid;place-items:center}
-.task-main{flex:1;min-width:0}
-.task-main b{display:block}
-.task-main small{color:var(--muted)}
-.nav{position:fixed;bottom:0;left:0;right:0;background:#0d0d0df2;border-top:1px solid #292929;backdrop-filter:blur(12px)}
-.navin{max-width:520px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px env(safe-area-inset-bottom)}
-.nav button{background:none;border:0;color:#888;padding:8px 2px;font-size:11px}
-.nav button.active{color:var(--gold)}
-.page{display:none}.page.active{display:block}
-.notice{color:var(--muted);font-size:12px;line-height:1.5}
-.ref{background:#201b0d;border:1px solid #4b3c16;border-radius:14px;padding:14px;margin-top:12px;word-break:break-all}
-.status{color:var(--gold);font-size:12px;margin-top:10px}
+:root {
+ --bg:#090909;
+ --card:#151515;
+ --gold:#d7ad45;
+ --text:#f5f5f5;
+ --muted:#9b9b9b;
+ --line:#262626;
+}
+* {box-sizing:border-box}
+body {
+ margin:0;
+ background:linear-gradient(180deg,#080808,#111 60%,#080808);
+ color:var(--text);
+ font-family:Inter,system-ui,sans-serif;
+}
+.app {
+ max-width:520px;
+ margin:auto;
+ min-height:100vh;
+ padding:20px 16px 92px;
+}
+.header {
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:20px;
+}
+.brand {font-weight:800;letter-spacing:.5px}
+.brand span {color:var(--gold)}
+.avatar {
+ width:40px;height:40px;border-radius:50%;
+ background:#222;display:grid;place-items:center;
+}
+.card {
+ background:linear-gradient(145deg,#171717,#101010);
+ border:1px solid var(--line);
+ border-radius:20px;
+ padding:18px;
+ margin-bottom:14px;
+ box-shadow:0 8px 30px #0008;
+}
+.balance-label {color:var(--muted);font-size:13px}
+.balance {font-size:34px;font-weight:800;margin:5px 0}
+.pts {color:var(--gold);font-size:13px}
+.btn {
+ border:0;border-radius:13px;padding:12px 16px;
+ font-weight:800;cursor:pointer;
+ background:var(--gold);color:#111;
+}
+.btn.secondary {background:#222;color:#fff;border:1px solid #333}
+.btn:disabled {opacity:.5;cursor:not-allowed}
+.row {display:flex;justify-content:space-between;gap:12px;align-items:center}
+.stat {flex:1}
+.stat b {display:block;font-size:18px}
+.stat small {color:var(--muted)}
+.title {font-size:18px;font-weight:800;margin:4px 0 12px}
+.task {
+ display:flex;align-items:center;gap:12px;
+ padding:13px 0;border-bottom:1px solid var(--line);
+}
+.task:last-child {border:0}
+.icon {
+ width:40px;height:40px;border-radius:12px;
+ background:#222;display:grid;place-items:center;
+}
+.task-main {flex:1;min-width:0}
+.task-main b {display:block}
+.task-main small {color:var(--muted)}
+.nav {
+ position:fixed;bottom:0;left:0;right:0;
+ background:#0d0d0df2;border-top:1px solid #292929;
+ backdrop-filter:blur(12px);
+}
+.navin {
+ max-width:520px;margin:auto;
+ display:grid;grid-template-columns:repeat(5,1fr);
+ padding:8px 8px env(safe-area-inset-bottom);
+}
+.nav button {
+ background:none;border:0;color:#888;
+ padding:8px 2px;font-size:11px;
+}
+.nav button.active {color:var(--gold)}
+.page {display:none}
+.page.active {display:block}
+.notice {color:var(--muted);font-size:12px;line-height:1.5}
+.ref {
+ background:#201b0d;border:1px solid #4b3c16;
+ border-radius:14px;padding:14px;margin-top:12px;
+ word-break:break-all;
+}
+.status {color:var(--gold);font-size:12px;margin-top:10px}
 </style>
 </head>
 
@@ -46,116 +107,143 @@ body{margin:0;background:linear-gradient(180deg,#080808,#111 60%,#080808);color:
 <div class="app">
 
 <div class="header">
-<div class="brand">⚡ <span>Task</span>Mint</div>
-<div class="avatar" id="avatar">TM</div>
+ <div class="brand">⚡ <span>Task</span>Mint</div>
+ <div class="avatar" id="avatar">TM</div>
 </div>
 
 <section id="home" class="page active">
-<div class="card">
-<div class="balance-label">YOUR BALANCE</div>
-<div class="balance" id="balance">0</div>
-<div class="pts">TASKMINT POINTS</div>
-<div style="margin-top:16px">
-<button class="btn" id="claim" disabled>Backend Setup Pending</button>
-</div>
-</div>
 
-<div class="card row">
-<div class="stat"><b id="streak">0</b><small>Day Streak</small></div>
-<div class="stat"><b id="refs">0</b><small>Referrals</small></div>
-<div class="stat"><b id="rank">—</b><small>Rank</small></div>
-</div>
+ <div class="card">
+  <div class="balance-label">YOUR BALANCE</div>
+  <div class="balance" id="balance">0</div>
+  <div class="pts">TASKMINT POINTS</div>
 
-<div class="card">
-<div class="title">🎯 Today's tasks</div>
-<div id="homeTasks">Loading tasks...</div>
-</div>
+  <div style="margin-top:16px">
+   <button class="btn" id="claim">
+    🎁 Daily Check-in +10 Points
+   </button>
+  </div>
+  <div class="status" id="checkinStatus"></div>
+ </div>
+
+ <div class="card row">
+  <div class="stat"><b id="streak">0</b><small>Day Streak</small></div>
+  <div class="stat"><b id="refs">0</b><small>Referrals</small></div>
+  <div class="stat"><b id="rank">—</b><small>Rank</small></div>
+ </div>
+
+ <div class="card">
+  <div class="title">🎯 Today's tasks</div>
+  <div id="homeTasks">Loading tasks...</div>
+ </div>
 </section>
 
 <section id="tasks" class="page">
-<div class="card">
-<div class="title">🎯 Tasks</div>
-<div id="taskList">Loading tasks...</div>
-<div class="status" id="taskStatus"></div>
-<button class="btn secondary" onclick="loadTasks()">↻ Refresh Tasks</button>
-</div>
+ <div class="card">
+  <div class="title">🎯 Tasks</div>
+  <div id="taskList">Loading tasks...</div>
+  <div class="status" id="taskStatus"></div>
+  <button class="btn secondary" onclick="loadTasks()">↻ Refresh Tasks</button>
+ </div>
 </section>
 
 <section id="invite" class="page">
-<div class="card">
-<div class="title">👥 Invite & Earn</div>
-<p class="notice">Share your personal referral link.</p>
-<div class="ref" id="refLink">Generating...</div>
-<div style="margin-top:12px">
-<button class="btn" id="share">Share Link</button>
-</div>
-</div>
-<div class="card row">
-<div class="stat"><b id="refCount">0</b><small>Total Referrals</small></div>
-<div class="stat"><b id="refEarn">0</b><small>Referral Points</small></div>
-</div>
+ <div class="card">
+  <div class="title">👥 Invite & Earn</div>
+  <p class="notice">Share your personal referral link.</p>
+  <div class="ref" id="refLink">Generating...</div>
+  <div style="margin-top:12px">
+   <button class="btn" id="share">Share Link</button>
+  </div>
+ </div>
+
+ <div class="card row">
+  <div class="stat"><b id="refCount">0</b><small>Total Referrals</small></div>
+  <div class="stat"><b id="refEarn">0</b><small>Referral Points</small></div>
+ </div>
 </section>
 
 <section id="rewards" class="page">
-<div class="card">
-<div class="title">🎁 Rewards</div>
-<div class="task">
-<div class="icon">🎁</div>
-<div class="task-main">
-<b>Coming Soon</b>
-<small>Rewards will be enabled after backend setup.</small>
-</div>
-</div>
-</div>
+ <div class="card">
+  <div class="title">🎁 Rewards</div>
+  <div class="task">
+   <div class="icon">🎁</div>
+   <div class="task-main">
+    <b>Coming Soon</b>
+    <small>Rewards will be enabled soon.</small>
+   </div>
+  </div>
+ </div>
 </section>
 
 <section id="profile" class="page">
-<div class="card">
-<div class="title">👤 Profile</div>
-<div class="task">
-<div class="icon">🆔</div>
-<div class="task-main">
-<b id="userName">Demo User</b>
-<small id="userId">Demo mode</small>
-</div>
-</div>
-<p class="notice">Telegram identity and reward transactions must be verified server-side.</p>
-</div>
+ <div class="card">
+  <div class="title">👤 Profile</div>
+  <div class="task">
+   <div class="icon">🆔</div>
+   <div class="task-main">
+    <b id="userName">Telegram User</b>
+    <small id="userId">Loading...</small>
+   </div>
+  </div>
+  <p class="notice">Telegram identity and reward transactions are verified server-side.</p>
+ </div>
 </section>
 
 </div>
 
 <div class="nav">
-<div class="navin">
-<button data-page="home" class="active">🏠<br>Home</button>
-<button data-page="tasks">🎯<br>Tasks</button>
-<button data-page="invite">👥<br>Invite</button>
-<button data-page="rewards">🎁<br>Rewards</button>
-<button data-page="profile">👤<br>Profile</button>
-</div>
+ <div class="navin">
+  <button data-page="home" class="active">🏠<br>Home</button>
+  <button data-page="tasks">🎯<br>Tasks</button>
+  <button data-page="invite">👥<br>Invite</button>
+  <button data-page="rewards">🎁<br>Rewards</button>
+  <button data-page="profile">👤<br>Profile</button>
+ </div>
 </div>
 
 <script>
 const tg = window.Telegram?.WebApp;
+
 tg?.ready();
 tg?.expand();
 
-// SUPABASE CONNECTION
-const SUPABASE_URL = "https://ssboyrkitzoduapfcgzt.supabase.co";
+const SUPABASE_URL =
+ "https://ssboyrkitzoduapfcgzt.supabase.co";
 
-const SUPABASE_KEY = "sb_publishable_z4sMSWGbIblaKTz9SzTJoQ_BDiGCB37";
+const SUPABASE_KEY =
+ "sb_publishable_z4sMSWGbIblaKTz9SzTJoQ_BDiGCB37";
+
+const BOT_USERNAME = "TaskMintRewardsXBot";
 
 let tasks = [];
 
 const KEY = "taskmint_demo_v1";
 
-let state = JSON.parse(
- localStorage.getItem(KEY) ||
- '{"points":0,"streak":0,"refs":0,"refEarn":0,"claimed":false,"tasks":{}}'
-);
+let state;
+
+try {
+ state = JSON.parse(
+  localStorage.getItem(KEY) ||
+  '{"points":0,"streak":0,"refs":0,"refEarn":0,"claimed":false,"tasks":{}}'
+ );
+} catch(e) {
+ state = {
+  points:0,
+  streak:0,
+  refs:0,
+  refEarn:0,
+  claimed:false,
+  tasks:{}
+ };
+}
+
+function saveState() {
+ localStorage.setItem(KEY,JSON.stringify(state));
+}
 
 function escapeHTML(value) {
- return String(value ?? "").replace(/[&<>"']/g, c => ({
+ return String(value ?? "").replace(/[&<>"']/g,c => ({
   "&":"&amp;",
   "<":"&lt;",
   ">":"&gt;",
@@ -164,19 +252,33 @@ function escapeHTML(value) {
  })[c]);
 }
 
+function indiaDate() {
+ return new Date().toLocaleDateString("en-CA",{
+  timeZone:"Asia/Kolkata"
+ });
+}
+
 function render() {
 
  document.getElementById("balance").textContent =
- state.points.toLocaleString();
+  Number(state.points || 0).toLocaleString();
 
- document.getElementById("streak").textContent = state.streak;
- document.getElementById("refs").textContent = state.refs;
- document.getElementById("refCount").textContent = state.refs;
- document.getElementById("refEarn").textContent = state.refEarn;
+ document.getElementById("streak").textContent =
+  state.streak || 0;
+
+ document.getElementById("refs").textContent =
+  state.refs || 0;
+
+ document.getElementById("refCount").textContent =
+  state.refs || 0;
+
+ document.getElementById("refEarn").textContent =
+  state.refEarn || 0;
 
  const user = tg?.initDataUnsafe?.user;
 
  if(user) {
+
   document.getElementById("userName").textContent =
    [user.first_name,user.last_name].filter(Boolean).join(" ");
 
@@ -185,45 +287,132 @@ function render() {
 
   document.getElementById("avatar").textContent =
    (user.first_name || "T").slice(0,2).toUpperCase();
+
+  document.getElementById("refLink").textContent =
+   "https://t.me/" + BOT_USERNAME + "?start=ref_" + user.id;
+
+ } else {
+
+  document.getElementById("userName").textContent =
+   "Telegram User";
+
+  document.getElementById("userId").textContent =
+   "Open inside Telegram";
+
+  document.getElementById("refLink").textContent =
+   "Open TaskMint inside Telegram";
  }
 
  const html = tasks.length
- ? tasks.map(t => `
-  <div class="task">
-   <div class="icon">⚡</div>
-   <div class="task-main">
-    <b>${escapeHTML(t.title)}</b>
-    <small>${escapeHTML(t.description)}</small>
-    <small style="display:block;color:#d7ad45">
-     +${escapeHTML(t.points)} Points
-    </small>
+  ? tasks.map(t => `
+   <div class="task">
+    <div class="icon">⚡</div>
+    <div class="task-main">
+     <b>${escapeHTML(t.title)}</b>
+     <small>${escapeHTML(t.description)}</small>
+     <small style="display:block;color:#d7ad45">
+      +${escapeHTML(t.points)} Points
+     </small>
+    </div>
+    <button class="btn secondary" disabled>Coming Soon</button>
    </div>
-   <button class="btn secondary" disabled>Coming Soon</button>
-  </div>
- `).join("")
- : "<p class='notice'>No active tasks available.</p>";
+  `).join("")
+  : "<p class='notice'>No active tasks available.</p>";
 
  document.getElementById("taskList").innerHTML = html;
  document.getElementById("homeTasks").innerHTML = html;
 
- document.getElementById("refLink").textContent =
- "https://t.me/YOUR_BOT_USERNAME?start=ref_" + (user?.id || "demo");
-
- 
 }
 
-// LOAD TASKS FROM SUPABASE
+// DAILY CHECK-IN
+
+async function claimDailyCheckin() {
+
+ const btn = document.getElementById("claim");
+ const status = document.getElementById("checkinStatus");
+
+ if(!tg?.initData || !tg?.initDataUnsafe?.user?.id) {
+  status.textContent = "Please open TaskMint from Telegram.";
+  return;
+ }
+
+ if(state.claimDate === indiaDate()) {
+  btn.disabled = true;
+  btn.textContent = "✓ Checked In Today";
+  status.textContent = "You have already checked in today.";
+  return;
+ }
+
+ btn.disabled = true;
+ btn.textContent = "Claiming...";
+ status.textContent = "Verifying Telegram account...";
+
+ try {
+
+  const response = await fetch(
+   SUPABASE_URL + "/functions/v1/daily-checkin",
+   {
+    method:"POST",
+    headers:{
+     "Content-Type":"application/json",
+     "apikey":SUPABASE_KEY
+    },
+    body:JSON.stringify({
+     initData:tg.initData
+    })
+   }
+  );
+
+  const result = await response.json();
+
+  if(!response.ok || !result.success) {
+   throw new Error(
+    result.message || "Daily check-in failed"
+   );
+  }
+
+  state.points = Number(result.total_points);
+  state.streak = Number(state.streak || 0) + 1;
+  state.claimDate = indiaDate();
+
+  saveState();
+  render();
+
+  btn.disabled = true;
+  btn.textContent = "✓ Checked In Today";
+
+  status.textContent =
+   "Congratulations! 10 Points Added Successfully.";
+
+  tg?.HapticFeedback?.notificationOccurred("success");
+
+ } catch(error) {
+
+  status.textContent = error.message;
+
+  if(
+   error.message.toLowerCase().includes("already checked in")
+  ) {
+   btn.disabled = true;
+   btn.textContent = "✓ Checked In Today";
+  } else {
+   btn.disabled = false;
+   btn.textContent = "🎁 Daily Check-in +10 Points";
+  }
+
+ }
+}
+
+document.getElementById("claim").onclick =
+ claimDailyCheckin;
+
+// LOAD TASKS
+
 async function loadTasks() {
 
  const status = document.getElementById("taskStatus");
 
  status.textContent = "Loading tasks...";
-
- document.getElementById("taskList").innerHTML =
- "Loading tasks...";
-
- document.getElementById("homeTasks").innerHTML =
- "Loading tasks...";
 
  try {
 
@@ -231,22 +420,19 @@ async function loadTasks() {
    SUPABASE_URL +
    "/rest/v1/tasks?select=id,title,description,points&is_active=eq.true&order=id.asc",
    {
-    method: "GET",
-    headers: {
-     "apikey": SUPABASE_KEY,
-     "Authorization": "Bearer " + SUPABASE_KEY
+    method:"GET",
+    headers:{
+     "apikey":SUPABASE_KEY,
+     "Authorization":"Bearer " + SUPABASE_KEY
     }
    }
   );
 
   if(!response.ok) {
-   const error = await response.text();
-   throw new Error(error);
+   throw new Error(await response.text());
   }
 
-  const data = await response.json();
-
-  tasks = data;
+  tasks = await response.json();
 
   render();
 
@@ -261,7 +447,7 @@ async function loadTasks() {
    "Error loading tasks: " + error.message;
 
   document.getElementById("taskList").innerHTML =
-   "<p class='notice'>Tasks load nahi hui. Please check Supabase settings.</p>";
+   "<p class='notice'>Unable to load tasks.</p>";
 
   document.getElementById("homeTasks").innerHTML =
    "<p class='notice'>Unable to load tasks.</p>";
@@ -269,6 +455,7 @@ async function loadTasks() {
 }
 
 // NAVIGATION
+
 document.querySelectorAll(".nav button").forEach(button => {
 
  button.onclick = () => {
@@ -287,22 +474,33 @@ document.querySelectorAll(".nav button").forEach(button => {
 });
 
 // SHARE LINK
+
 document.getElementById("share").onclick = () => {
 
  const link = document.getElementById("refLink").textContent;
 
  if(tg?.openTelegramLink) {
   tg.openTelegramLink(
-   "https://t.me/share/url?url=" + encodeURIComponent(link)
+   "https://t.me/share/url?url=" +
+   encodeURIComponent(link)
   );
  } else if(navigator.clipboard) {
   navigator.clipboard.writeText(link);
  }
 };
 
-// START APP
+// INITIALIZE
+
 render();
 loadTasks();
+
+if(state.claimDate === indiaDate()) {
+ const btn = document.getElementById("claim");
+ btn.disabled = true;
+ btn.textContent = "✓ Checked In Today";
+ document.getElementById("checkinStatus").textContent =
+  "You have already checked in today.";
+}
 
 </script>
 </body>
